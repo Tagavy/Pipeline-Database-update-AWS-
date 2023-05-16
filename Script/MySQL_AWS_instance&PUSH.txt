@@ -1,0 +1,67 @@
+#DROP DATABASE P3_Cities;
+
+CREATE DATABASE P3_Cities;
+
+USE P3_Cities;
+#DROP TABLE cities;
+#City table for pushing through variant3(with all columns, primary and foreign key, connections established))
+CREATE TABLE cities(
+    city_name VARCHAR(30),
+    countries TEXT,
+    latitudes FLOAT,
+    longitudes FLOAT,
+    wiki_links TEXT,
+    geo_airports VARCHAR(5),
+    PRIMARY KEY (city_name)
+);
+SELECT * FROM cities;
+DESCRIBE cities; # commadn to describe one TABLE
+
+
+#Population table for pushing through variant3(with all columns, foreign key, connections established))
+#DROP TABLE city_populations;
+CREATE TABLE city_populations(
+time_stamps DATETIME,
+city_name VARCHAR(30),
+populations FLOAT,
+FOREIGN KEY (city_name) REFERENCES cities(city_name)
+);
+
+
+SELECT * FROM city_populations;
+
+
+#Airports Table
+ALTER TABLE city_airports
+    MODIFY COLUMN city_name CHAR(30),
+    MODIFY COLUMN icao CHAR(30),
+    Add PRIMARY KEY (icao),
+    ADD FOREIGN KEY (city_name) REFERENCES cities (city_name);
+
+
+#Weather table, pushed through variant1(with no prior table creation, foreign key added and connection established postfactum)
+#DROP TABLE cities_weather;
+ALTER TABLE cities_weather
+    MODIFY COLUMN city CHAR(30),
+    ADD FOREIGN KEY (city) REFERENCES cities(city_name);
+
+SELECT * FROM cities_weather;
+
+
+#Arrival Table
+#DROP TABLE flight_arrivals;
+
+ALTER TABLE flight_arrivals
+    MODIFY COLUMN icao CHAR(30),
+    ADD FOREIGN KEY (icao) REFERENCES city_airports(icao);
+
+Select * FROM flight_arrivals;
+
+
+#Departure Table
+#DROP TABLE flight_departures;
+ALTER TABLE flight_departures
+    MODIFY COLUMN icao CHAR(30),
+    ADD FOREIGN KEY (icao) REFERENCES city_airports(icao);
+
+Select * FROM flight_departures;
